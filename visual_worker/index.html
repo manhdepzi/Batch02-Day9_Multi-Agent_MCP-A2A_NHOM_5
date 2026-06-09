@@ -3,95 +3,109 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DAY8_9 Visual Worker</title>
+    <title>Stage 5 A2A Demo Visual Worker</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <aside class="sidebar" aria-label="Project overview">
-        <div class="brand">
-          <span class="brand-mark">89</span>
-          <div>
-            <h1>DAY8_9</h1>
-            <p>Visual Worker</p>
-          </div>
+    <main class="demo-screen">
+      <section class="service-panel">
+        <div class="section-title">
+          <h1>Service Status</h1>
+          <button id="refresh" type="button">Refresh</button>
         </div>
+        <div class="service-grid" id="service-grid"></div>
+        <p class="online-note">All services online — ready for live demo</p>
+      </section>
 
-        <nav class="tabs" aria-label="Views">
-          <button class="tab is-active" data-view="overview" type="button">Overview</button>
-          <button class="tab" data-view="day8" type="button">Day 8 RAG</button>
-          <button class="tab" data-view="day9" type="button">Day 9 A2A</button>
-          <button class="tab" data-view="integration" type="button">Integration</button>
-        </nav>
+      <section class="main-grid">
+        <article class="card question-card">
+          <h2>Legal Question</h2>
+          <label for="question">Enter your question</label>
+          <textarea id="question">A company violated SEC reporting requirements. What compliance and legal risks does it face?</textarea>
 
-        <section class="panel compact">
-          <h2>Project Signal</h2>
-          <dl class="stats">
-            <div>
-              <dt>Day 8</dt>
-              <dd>10 RAG tasks</dd>
-            </div>
-            <div>
-              <dt>Day 9</dt>
-              <dd>Registry + 4 agents</dd>
-            </div>
-            <div>
-              <dt>Bridge</dt>
-              <dd>RAG tool inside Law Agent</dd>
-            </div>
-          </dl>
-        </section>
-      </aside>
-
-      <section class="workspace">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Source map generated from local folders</p>
-            <h2 id="view-title">End-to-End Legal AI Workflow</h2>
+          <div class="samples" aria-label="Sample questions">
+            <button type="button" data-question="If a company breaks a contract and avoids taxes, what are the legal and regulatory consequences?">Contract + tax evasion</button>
+            <button type="button" data-question="What risks arise when a company hides foreign bank accounts and misses FBAR filing?">Foreign bank account FBAR</button>
+            <button type="button" data-question="How should a company assess GDPR data compliance failures?">GDPR data compliance</button>
+            <button type="button" data-question="A company violated SEC reporting requirements. What compliance and legal risks does it face?">SEC compliance breach</button>
           </div>
-          <div class="controls" aria-label="Workflow controls">
-            <button class="icon-button" id="step-back" type="button" title="Previous step" aria-label="Previous step">
-              <span aria-hidden="true">‹</span>
-            </button>
-            <button class="primary-button" id="play-flow" type="button">Run Flow</button>
-            <button class="icon-button" id="step-next" type="button" title="Next step" aria-label="Next step">
-              <span aria-hidden="true">›</span>
-            </button>
-          </div>
-        </header>
 
-        <section class="canvas-wrap" aria-label="Interactive workflow diagram">
-          <div class="flow-grid" id="flow-grid"></div>
-        </section>
-
-        <section class="lower-grid">
-          <article class="panel">
-            <div class="panel-heading">
-              <h3 id="detail-title">Select a worker</h3>
-              <span class="status-pill" id="detail-status">Ready</span>
+          <div class="actions">
+            <button class="run-button" id="run" type="button">Run Stage 5 Demo</button>
+            <div class="sim-mode">
+              <span>Simulated Demo</span>
+              <small id="speed-label">Normal speed (~16s)</small>
             </div>
-            <p id="detail-copy">
-              Click a node in the diagram to inspect its role, source file, and how it connects Day 8 with Day 9.
-            </p>
-            <div class="file-list" id="detail-files"></div>
-          </article>
-
-          <article class="panel">
-            <div class="panel-heading">
-              <h3>Execution Trace</h3>
-              <span class="status-pill muted" id="trace-step">Idle</span>
-            </div>
-            <ol class="trace" id="trace"></ol>
-          </article>
-        </section>
-
-        <section class="panel map-panel">
-          <div class="panel-heading">
-            <h3>Source Mapping</h3>
-            <span class="status-pill muted">Local files</span>
           </div>
-          <div class="mapping-table" id="mapping-table"></div>
-        </section>
+
+          <label class="toggle-row">
+            <input id="fast" type="checkbox" />
+            <span>Fast simulation (speed x6)</span>
+          </label>
+        </article>
+
+        <article class="card topology-card">
+          <h2>Agent Topology</h2>
+          <div class="topology" id="topology">
+            <div class="top-node" data-agent="User">
+              <strong>User</strong>
+              <span>Browser</span>
+            </div>
+            <span class="arrow">→</span>
+            <div class="top-node" data-agent="Customer Agent">
+              <strong>Customer<br />Agent</strong>
+              <span>depth=0 · :10100</span>
+            </div>
+            <span class="arrow">→</span>
+            <div class="top-node plain" data-agent="Registry">
+              <strong>Registry</strong>
+              <span>discover · :10000</span>
+            </div>
+            <span class="arrow">→</span>
+            <div class="top-node" data-agent="Law Agent">
+              <strong>Law<br />Agent</strong>
+              <span>depth=1 · :10101</span>
+            </div>
+            <span class="arrow">→</span>
+            <div class="parallel-box">
+              <small>Parallel</small>
+              <div class="top-node dashed" data-agent="Tax Agent">
+                <strong>Tax Agent</strong>
+                <span>depth=2 · :10102</span>
+              </div>
+              <div class="top-node dashed" data-agent="Compliance Agent">
+                <strong>Compliance Agent</strong>
+                <span>depth=2 · :10103</span>
+              </div>
+            </div>
+            <span class="arrow">→</span>
+            <div class="top-node" data-agent="Aggregate">
+              <strong>Aggregate<br />& Answer</strong>
+              <span>final_answer</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card timeline-card">
+        <div class="timeline-head">
+          <h2>Execution Timeline</h2>
+          <span id="total-time">Total 0.00s</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="timeline" id="timeline"></div>
+      </section>
+
+      <section class="card answer-card" id="answer-card">
+        <h2>Final Answer</h2>
+        <div class="meta-row">
+          <span id="latency">Total latency: 0.00s</span>
+          <span>trace_id: 8878e928-901b-4eb2-b64e-014b5f4ff9d0</span>
+          <span>context_id: 34dadccf-2739-4408-aabb-e39b2b9c948f</span>
+        </div>
+        <div class="answer-box" id="answer-box"></div>
       </section>
     </main>
 

@@ -368,6 +368,96 @@ Sửa `tax_agent/graph.py`, thay đổi system prompt để agent trả lời ng
 
 ---
 
+## Bài Tập Cộng Điểm: Latency Stage 5
+
+### 1. Latency của hệ thống là bao nhiêu giây?
+
+Sau khi chạy full Stage 5 bằng `test_client.py`, latency được tính từ lúc client gửi câu hỏi đến lúc nhận response cuối cùng từ Customer Agent.
+
+Lệnh đo trên Windows PowerShell:
+
+```powershell
+$elapsed = Measure-Command { .\.venv\Scripts\python.exe test_client.py }
+"Latency: {0:N2} seconds" -f $elapsed.TotalSeconds
+```
+
+Kết quả đo được trong lần chạy thành công:
+
+```text
+Latency baseline: 81.1 seconds
+```
+
+Latency cao vì một câu hỏi Stage 5 phải đi qua nhiều bước và nhiều lần gọi LLM:
+
+```text
+Customer Agent
+-> Law Agent
+-> analyze_law
+-> check_routing
+-> Tax Agent và Compliance Agent
+-> aggregate
+-> Customer Agent trả về user
+```
+
+Tax Agent và Compliance Agent đã chạy song song, nhưng tổng thời gian vẫn bị ảnh hưởng bởi nhiều lần gọi LLM và network round-trip qua A2A/HTTP.
+
+### 2. Đề xuất phương án giảm latency và demo
+
+Phương án giảm latency:
+
+1. Giới hạn output token của LLM bằng `OPENROUTER_MAX_TOKENS`.
+2. Dùng model nhẹ hơn, ví dụ `openai/gpt-4o-mini`.
+3. Rút gọn prompt của các agent, đặc biệt Customer Agent và Law Agent.
+4. Giữ parallel delegation trong Law Agent để Tax Agent và Compliance Agent chạy song song.
+
+Trong repo, `common/llm.py` đã thêm giới hạn:
+
+```python
+max_tokens=int(os.getenv("OPENROUTER_MAX_TOKENS", "128"))
+```
+
+Cấu hình `.env` đề xuất:
+
+```env
+OPENROUTER_MODEL=openai/gpt-4o-mini
+OPENROUTER_MAX_TOKENS=128
+```
+
+Lệnh demo sau khi apply:
+
+```powershell
+# Restart 5 services sau khi sửa .env
+.\.venv\Scripts\python.exe -m registry
+.\.venv\Scripts\python.exe -m tax_agent
+.\.venv\Scripts\python.exe -m compliance_agent
+.\.venv\Scripts\python.exe -m law_agent
+.\.venv\Scripts\python.exe -m customer_agent
+
+# Đo lại latency
+$elapsed = Measure-Command { .\.venv\Scripts\python.exe test_client.py }
+"Latency after optimization: {0:N2} seconds" -f $elapsed.TotalSeconds
+```
+
+Kết quả demo trên máy hiện tại:
+
+```text
+Baseline thành công: 81.1 seconds
+Sau khi apply max_tokens/model nhẹ: chưa đo được response thành công vì OpenRouter báo lỗi 402
+do tài khoản không đủ credit / prompt token limit.
+```
+
+Lỗi gặp khi demo lại:
+
+```text
+Prompt tokens limit exceeded: 457 > 424
+```
+
+Vì vậy, số `5.84 seconds` trong lần demo sau tối ưu không được tính là latency hợp lệ, vì request thất bại sớm do OpenRouter credit limit, không phải response thành công của hệ thống.
+
+Kết luận: với lần chạy thành công hiện tại, latency hợp lệ là **81.1 giây**. Phương án giảm latency hợp lý nhất là dùng model nhanh hơn, giới hạn `max_tokens`, rút gọn prompt và giữ song song hóa các specialist agents. Cần nạp thêm credit hoặc dùng model free/cheap hơn để đo được latency sau tối ưu một cách hợp lệ.
+
+---
+
 ## Phần 6: Tổng Kết & Mở Rộng (10 phút)
 
 ### So Sánh 5 Stages

@@ -1,15 +1,19 @@
-# DAY8_9 Visual Worker
+# Stage 5 A2A Demo Visual Worker
 
-Static visual source for explaining how the Day 8 RAG pipeline can connect to
-the Day 9 A2A multi-agent system.
+Static browser UI that renders a live-demo style screen similar to the classroom
+projection: service status, legal question input, agent topology, execution
+timeline, and final answer.
 
-## Open
+## Run
 
-Open `index.html` in a browser. No install step is required.
+Open `index.html` directly in a browser.
 
-## What It Shows
+No server or Python dependency is required. The demo is simulated in JavaScript
+so it can be presented even when the A2A services are not running.
 
-- Day 8 RAG flow: collect, convert, chunk, index, retrieve, rerank, citation generation.
-- Day 9 A2A flow: Customer Agent, Registry, Law Agent, Tax Agent, Compliance Agent.
-- Integration point: expose Day 8 retrieval/generation as a RAG tool for the Law Agent.
-- Source mapping: the local files that drive each worker/node.
+## Controls
+
+- `Run Stage 5 Demo`: starts the simulated execution timeline.
+- `Fast simulation`: shortens the demo timing.
+- Sample question buttons: replace the text in the question box.
+- `Refresh`: pulses the service status indicators.
