@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DAY8_9 Visual Worker</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="sidebar" aria-label="Project overview">
+        <div class="brand">
+          <span class="brand-mark">89</span>
+          <div>
+            <h1>DAY8_9</h1>
+            <p>Visual Worker</p>
+          </div>
+        </div>
+
+        <nav class="tabs" aria-label="Views">
+          <button class="tab is-active" data-view="overview" type="button">Overview</button>
+          <button class="tab" data-view="day8" type="button">Day 8 RAG</button>
+          <button class="tab" data-view="day9" type="button">Day 9 A2A</button>
+          <button class="tab" data-view="integration" type="button">Integration</button>
+        </nav>
+
+        <section class="panel compact">
+          <h2>Project Signal</h2>
+          <dl class="stats">
+            <div>
+              <dt>Day 8</dt>
+              <dd>10 RAG tasks</dd>
+            </div>
+            <div>
+              <dt>Day 9</dt>
+              <dd>Registry + 4 agents</dd>
+            </div>
+            <div>
+              <dt>Bridge</dt>
+              <dd>RAG tool inside Law Agent</dd>
+            </div>
+          </dl>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Source map generated from local folders</p>
+            <h2 id="view-title">End-to-End Legal AI Workflow</h2>
+          </div>
+          <div class="controls" aria-label="Workflow controls">
+            <button class="icon-button" id="step-back" type="button" title="Previous step" aria-label="Previous step">
+              <span aria-hidden="true">‹</span>
+            </button>
+            <button class="primary-button" id="play-flow" type="button">Run Flow</button>
+            <button class="icon-button" id="step-next" type="button" title="Next step" aria-label="Next step">
+              <span aria-hidden="true">›</span>
+            </button>
+          </div>
+        </header>
+
+        <section class="canvas-wrap" aria-label="Interactive workflow diagram">
+          <div class="flow-grid" id="flow-grid"></div>
+        </section>
+
+        <section class="lower-grid">
+          <article class="panel">
+            <div class="panel-heading">
+              <h3 id="detail-title">Select a worker</h3>
+              <span class="status-pill" id="detail-status">Ready</span>
+            </div>
+            <p id="detail-copy">
+              Click a node in the diagram to inspect its role, source file, and how it connects Day 8 with Day 9.
+            </p>
+            <div class="file-list" id="detail-files"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <h3>Execution Trace</h3>
+              <span class="status-pill muted" id="trace-step">Idle</span>
+            </div>
+            <ol class="trace" id="trace"></ol>
+          </article>
+        </section>
+
+        <section class="panel map-panel">
+          <div class="panel-heading">
+            <h3>Source Mapping</h3>
+            <span class="status-pill muted">Local files</span>
+          </div>
+          <div class="mapping-table" id="mapping-table"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
